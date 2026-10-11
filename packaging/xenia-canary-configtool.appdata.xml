@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.xenia-configtool.XeniaCanaryConfigTool</id>
+  <!--
+    AppStream 的 id 必须是不含连字符的「反向域名」形式，且须与
+    <文件名>.appdata.xml 的文件名一致（metainfo-filename-cid-mismatch）。
+    故此处用 io.github.hein1225.XeniaCanaryConfigTool，
+    对应文件名 io.github.hein1225.XeniaCanaryConfigTool.appdata.xml。
+  -->
+  <id>io.github.hein1225.XeniaCanaryConfigTool</id>
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
+
+  <developer id="io.github.hein1225">
+    <name>hein1225</name>
+  </developer>
 
   <name>Xenia Canary Config Tool</name>
   <name xml:lang="zh_CN">Xenia Canary 配置工具</name>
@@ -39,13 +49,18 @@
       1280x800 及更高分辨率均可自适应。界面支持简体中文与英文，可运行时实时切换。
     </p>
     <p xml:lang="zh_CN">主要功能：</p>
-    <ul xml:lang="zh_CN">
-      <li>按分类浏览全部设置，支持按名称与说明搜索</li>
-      <li>按类型智能编辑：布尔值用开关、枚举值用下拉框、数值项带范围提示</li>
-      <li>鼠标悬停即显示完整说明，不必离开列表</li>
-      <li>可自选 xenia-canary.config.toml 位置，保存时默认写回原文件</li>
-      <li>每次写入前自动生成带时间戳的备份</li>
-      <li>保留原文件的注释、顺序与排版格式</li>
+    <!--
+      AppStream 不允许在 <ul> 上使用 xml:lang（会报
+      description-enum-group-translated）。中文列表另用 <ul> 承载，
+      由外层中文段落引出即可，无需也不可在列表标签上标注语言。
+    -->
+    <ul>
+      <li xml:lang="zh_CN">按分类浏览全部设置，支持按名称与说明搜索</li>
+      <li xml:lang="zh_CN">按类型智能编辑：布尔值用开关、枚举值用下拉框、数值项带范围提示</li>
+      <li xml:lang="zh_CN">鼠标悬停即显示完整说明，不必离开列表</li>
+      <li xml:lang="zh_CN">可自选 xenia-canary.config.toml 位置，保存时默认写回原文件</li>
+      <li xml:lang="zh_CN">每次写入前自动生成带时间戳的备份</li>
+      <li xml:lang="zh_CN">保留原文件的注释、顺序与排版格式</li>
     </ul>
   </description>
 

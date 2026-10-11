@@ -58,8 +58,15 @@ fi
 say "复制桌面集成文件"
 cp "$PROJECT_ROOT/packaging/$APP_ID.desktop" \
    "$APPDIR/usr/share/applications/$APP_ID.desktop"
+# AppStream 要求 metainfo 的文件名与 XML 里的 <id> 完全一致，否则
+# appimagetool 调 appstreamcli 校验时会报 metainfo-filename-cid-mismatch
+# 并直接拒绝打包。这里从 XML 读取 <id> 作为目标文件名，避免两者脱钩。
+APPSTREAM_ID="$(sed -n 's:.*<id>[[:space:]]*\([^<[:space:]]*\)[[:space:]]*</id>.*:\1:p' \
+    "$PROJECT_ROOT/packaging/$APP_ID.appdata.xml" | head -1)"
+[ -n "$APPSTREAM_ID" ] || die "无法从 appdata.xml 解析出 <id>（AppStream 必需）"
 cp "$PROJECT_ROOT/packaging/$APP_ID.appdata.xml" \
-   "$APPDIR/usr/share/metainfo/$APP_ID.appdata.xml"
+   "$APPDIR/usr/share/metainfo/$APPSTREAM_ID.appdata.xml"
+say "  AppStream id: $APPSTREAM_ID"
 
 say "复制图标"
 for size in 16 24 32 48 64 128 256 512; do
