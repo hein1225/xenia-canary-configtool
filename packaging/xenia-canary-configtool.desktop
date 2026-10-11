@@ -1,0 +1,17 @@
+[Desktop Entry]
+Type=Application
+Name=Xenia Canary Config Tool
+Name[zh_CN]=Xenia Canary 配置工具
+GenericName=Xbox 360 Emulator Configuration Editor
+GenericName[zh_CN]=Xbox 360 模拟器配置编辑器
+Comment=Graphically edit xenia-canary.config.toml
+Comment[zh_CN]=图形化编辑 xenia-canary.config.toml
+Exec=xenia-canary-configtool
+Icon=xenia-canary-configtool
+Terminal=false
+Categories=Settings;Game;
+Keywords=Xbox;360;xenia;emulator;config;toml;
+Keywords[zh_CN]=Xbox;360;xenia;模拟器;配置;toml;
+StartupWMClass=XeniaCanaryConfigTool
+StartupNotify=true
+X-AppImage-Version=1.0.0

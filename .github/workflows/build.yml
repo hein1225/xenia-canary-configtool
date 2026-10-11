@@ -1,0 +1,199 @@
+name: Build and Release
+
+# 手动触发构建；构建成功后才会发布 Release。
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "发布版本号（如 1.0.0）"
+        required: true
+        default: "1.0.0"
+
+permissions:
+  contents: write
+
+jobs:
+  # ------------------------------------------------------------------
+  # 1. 测试：构建前先跑通全部断言
+  # ------------------------------------------------------------------
+  test:
+    name: 测试
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Python 与 Tk
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-tk xvfb x11-utils
+
+      - name: 端到端测试
+        run: |
+          # 测试脚本会自行准备足够大的显示环境（必要时拉起 Xvfb），
+          # 在 CI 的无头环境里无需额外配置。
+          python3 tools/test_e2e.py
+
+      - name: 后端依从规则测试
+        run: bash tools/test_dependency.sh
+
+  # ------------------------------------------------------------------
+  # 2. 构建：产出 AppImage
+  # ------------------------------------------------------------------
+  build:
+    name: 构建 AppImage
+    needs: test
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装构建依赖
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            python3-tk python3-dev \
+            fonts-dejavu-core fonts-wqy-microhei \
+            libfuse2 file zsync
+          echo "--- 依赖版本 ---"
+          python3 --version
+          python3 -c "import tkinter; print('tkinter OK, Tk', tkinter.TkVersion)"
+
+      - name: 校验构建工具齐备
+        run: |
+          set -euo pipefail
+          test -f tools/appimagetool || { echo "缺少 tools/appimagetool"; exit 1; }
+          test -f runtime/runtime-x86_64 || { echo "缺少 runtime/runtime-x86_64"; exit 1; }
+          chmod +x tools/appimagetool
+          echo "构建工具就绪"
+
+      - name: 构建 AppImage
+        run: bash packaging/build.sh
+
+      - name: 验证产物
+        run: bash tools/verify_appimage.sh
+
+      - name: 计算校验和
+        run: |
+          cd dist
+          md5sum *.AppImage > checksums.txt
+          sha256sum *.AppImage >> checksums.txt
+          cat checksums.txt
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: XeniaCanaryConfigTool-AppImage
+          path: |
+            dist/*.AppImage
+            dist/checksums.txt
+          if-no-files-found: error
+          retention-days: 30
+
+  # ------------------------------------------------------------------
+  # 3. 发布：仅在构建成功后创建 Release
+  # ------------------------------------------------------------------
+  release:
+    name: 发布 Release
+    needs: build
+    runs-on: ubuntu-22.04
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+      url: ${{ steps.publish.outputs.url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 解析版本号
+        id: tag
+        run: |
+          VER='${{ inputs.version }}'
+          VER="${VER#v}"
+          echo "tag=v${VER}" >> "$GITHUB_OUTPUT"
+          echo "版本: v${VER}"
+
+      - name: 下载构建产物
+        uses: actions/download-artifact@v4
+        with:
+          name: XeniaCanaryConfigTool-AppImage
+          path: dist
+
+      - name: 发布 Release
+        id: publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+          SHORT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          VER="${TAG#v}"
+          echo "发布标签: $TAG"
+          ls -lh dist/
+
+          # 从 CHANGELOG.md 抽取本版本段落；抽不到则退回提交记录
+          CHANGES="$(awk -v ver="$VER" '
+            $0 ~ "^## \\[" ver "\\]" { found=1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md)"
+
+          if [ -z "$(printf '%s' "$CHANGES" | tr -d '[:space:]')" ]; then
+            echo "CHANGELOG.md 中未找到 ${VER} 段落，改用提交记录"
+            CHANGES="$(git log -20 --pretty='- %s' | sed 's/^- Merge pull request.*/- 合并上游改动/')"
+          fi
+
+          {
+            echo "## Xenia-canary-configtool ${VER}"
+            echo ""
+            echo "图形化编辑 \`xenia-canary.config.toml\` 的 Linux 桌面工具，"
+            echo "单文件 AppImage，自带 Python 运行时与字体，适用于 SteamOS / Linux 掌机。"
+            echo ""
+            echo "### 使用方法"
+            echo ""
+            echo '```bash'
+            echo "chmod +x XeniaCanaryConfigTool-*.AppImage"
+            echo "./XeniaCanaryConfigTool-*.AppImage"
+            echo '```'
+            echo ""
+            echo "### 更新内容"
+            echo ""
+            printf '%s\n' "$CHANGES"
+            echo ""
+            echo "### 校验和"
+            echo ""
+            echo '```'
+            cat dist/checksums.txt
+            echo '```'
+            echo ""
+            echo "由提交 \`${SHORT_SHA:0:7}\` 构建。"
+          } > release_notes.md
+
+          echo "--- Release 说明预览 ---"
+          head -40 release_notes.md
+
+          # 若标签已存在则复用，否则新建标签并发布
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release 已存在，覆盖附件与说明"
+            gh release upload "$TAG" dist/*.AppImage dist/checksums.txt --clobber
+            gh release edit "$TAG" --notes-file release_notes.md
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            gh release create "$TAG" \
+              --title "Xenia-canary-configtool ${VER}" \
+              --target "$SHORT_SHA" \
+              --notes-file release_notes.md \
+              dist/*.AppImage dist/checksums.txt
+          fi
+
+          echo "url=$(gh release view "$TAG" --json url -q .url)" >> "$GITHUB_OUTPUT"
+
+      - name: 汇总
+        run: |
+          {
+            echo "### 已发布"
+            echo ""
+            echo "- 版本：\`${{ steps.tag.outputs.tag }}\`"
+            echo "- Release：${{ steps.publish.outputs.url }}"
+            echo ""
+            echo '```'
+            cat dist/checksums.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

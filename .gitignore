@@ -1,0 +1,47 @@
+# ---------- 凭据与密钥：绝不入库 ----------
+# 构建目录中曾出现开发期 OpenSSH 私钥，这里做硬性阻断，
+# 防止将来误把 build/ 下的密钥纳入版本控制。
+*.key
+*.pem
+*.pub
+id_rsa*
+id_ed25519*
+.netrc
+.git-credentials
+*.token
+*credential*
+*secret*
+
+# ---------- 构建产物与中间目录 ----------
+build/
+dist/
+*.AppImage
+*.AppImage.zsync
+*.squashfs
+
+# 注意：tools/appimagetool 与 runtime/runtime-x86_64 是构建所需的静态二进制，
+# 已在仓库中版本化（CI 依赖它们），因此不做忽略。
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ---------- 编辑器与系统 ----------
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# ---------- 运行时产生的备份与本地配置 ----------
+*.bak
+*.bak.[0-9]*
+xenia-canary.config.toml.*
+
+# ---------- DSH 工具产生的检查点 ----------
+.dsh-checkpoints/
+.dsh/

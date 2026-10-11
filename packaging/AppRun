@@ -1,0 +1,192 @@
+#!/bin/bash
+# Xenia Canary 配置工具 —— AppImage 入口脚本 (AppRun)
+#
+# 职责：
+#   1. 探测图形会话类型（Wayland / X11 / gamescope），选择可用后端
+#   2. 定位捆绑的 Python 运行时（不依赖宿主系统，适配 SteamOS 只读根文件系统）
+#   3. 处理 Steam 运行时与容器环境下的显示套接字
+#   4. 把用户参数透传给应用
+
+set -u
+
+HERE="$(dirname "$(readlink -f "${0}")")"
+APP_ID="xenia-canary-configtool"
+
+log() {
+    # 仅在开启调试时输出，避免污染正常启动
+    if [ "${XENIA_CONFIGTOOL_DEBUG:-0}" = "1" ]; then
+        echo "[AppRun] $*" >&2
+    fi
+}
+
+# ---------------------------------------------------------------- 显示后端探测
+
+detect_display() {
+    local backend="none"
+
+    # gamescope（SteamOS 游戏模式）会在 X11 之上再套一层合成器
+    if [ -n "${GAMESCOPE_WAYLAND_DISPLAY:-}" ]; then
+        log "检测到 gamescope (Wayland)"
+        backend="wayland"
+    fi
+
+    if [ "$backend" = "none" ]; then
+        if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+            log "检测到 Wayland: WAYLAND_DISPLAY=$WAYLAND_DISPLAY"
+            backend="wayland"
+        elif [ "${XDG_SESSION_TYPE:-}" = "wayland" ]; then
+            log "检测到 Wayland 会话（无 WAYLAND_DISPLAY，将尝试默认套接字）"
+            backend="wayland"
+        fi
+    fi
+
+    if [ "$backend" = "none" ] && [ -n "${DISPLAY:-}" ]; then
+        log "检测到 X11: DISPLAY=$DISPLAY"
+        backend="x11"
+    fi
+
+    echo "$backend"
+}
+
+show_no_display_error() {
+    local msg
+    msg="无法连接到图形显示服务器。
+
+已探测的环境：
+  WAYLAND_DISPLAY = ${WAYLAND_DISPLAY:-（未设置）}
+  DISPLAY         = ${DISPLAY:-（未设置）}
+  XDG_SESSION_TYPE= ${XDG_SESSION_TYPE:-（未设置）}
+
+请在图形桌面会话中运行本程序。
+SteamOS 用户：请在「桌面模式」下运行，或把它作为非 Steam 应用添加到库中，
+再从游戏模式启动（游戏模式提供 gamescope 合成器）。"
+
+    if command -v zenity >/dev/null 2>&1; then
+        zenity --error --width=460 --title="Xenia Canary 配置工具" --text="$msg" 2>/dev/null &
+    elif command -v kdialog >/dev/null 2>&1; then
+        kdialog --error "$msg" 2>/dev/null &
+    elif command -v xmessage >/dev/null 2>&1; then
+        xmessage -center "$msg" 2>/dev/null &
+    fi
+    echo "$msg" >&2
+    exit 2
+}
+
+# ---------------------------------------------------------------- 运行时定位
+
+find_python() {
+    # 优先使用 AppImage 内捆绑的解释器，保证在 SteamOS 等只读系统上可用。
+    # python3.wrapper 会设置 PYTHONHOME / LD_LIBRARY_PATH / TCL_LIBRARY。
+    if [ -x "$HERE/usr/bin/python3.wrapper" ]; then
+        echo "$HERE/usr/bin/python3.wrapper"
+        return 0
+    fi
+    for cand in \
+        "$HERE/usr/bin/python3" \
+        "$HERE/usr/bin/python3.13" \
+        "$HERE/usr/bin/python3.12" \
+        "$HERE/usr/bin/python3.11"
+    do
+        if [ -x "$cand" ]; then
+            echo "$cand"
+            return 0
+        fi
+    done
+    # 回退到系统解释器
+    command -v python3 2>/dev/null && return 0
+    return 1
+}
+
+# ---------------------------------------------------------------- 主流程
+
+main() {
+    local backend
+    backend="$(detect_display)"
+
+    if [ "$backend" = "none" ]; then
+        show_no_display_error
+    fi
+
+    if [ "$backend" = "wayland" ]; then
+        # Tk 8.6 走 XWayland；带原生 Wayland 支持的构建会优先使用它。
+        # 仅在用户未指定时给出提示值，不覆盖显式环境。
+        export GDK_BACKEND="${GDK_BACKEND:-wayland,x11}"
+        # 若 Wayland 不可用但 XWayland 在（SteamOS 常见），确保 DISPLAY 已设置
+        if [ -z "${DISPLAY:-}" ] && [ -S /tmp/.X11-unix/X0 ]; then
+            export DISPLAY=:0
+            log "Wayland 会话下回退到 XWayland (DISPLAY=:0)"
+        fi
+    fi
+
+    # 高分屏 / 掌机缩放：优先遵循用户的 GDK 设定，未设置时用 1
+    export GDK_SCALE="${GDK_SCALE:-1}"
+
+    # 避免 Tk 在有 Wayland 会话时因 XDG_SESSION_TYPE 未定义而告警
+    export XDG_SESSION_TYPE="${XDG_SESSION_TYPE:-${backend}}"
+
+    # ------------------------------------------------------------ 字体
+    # Tk 在完全没有可用字体的环境里会抛
+    #   "failed to allocate font due to internal system font engine problem"
+    # 并直接崩溃；SteamOS 等精简系统字体不全，所以这里把包内字体
+    # 通过 fontconfig 注册进去，并始终把包内目录置于查找路径最前。
+    setup_fonts() {
+        local fontdir="$HERE/usr/share/fonts/truetype"
+        [ -d "$fontdir" ] || return 0
+
+        local confdir="${TMPDIR:-/tmp}/xenia-configtool-fonts-$$"
+        mkdir -p "$confdir" || return 0
+
+        # 包内字体排在最前，同时列出常见系统字体目录（不会丢掉宿主字体）
+        cat > "$confdir/fonts.conf" <<EOF
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <dir>$fontdir</dir>
+  <dir>/usr/share/fonts</dir>
+  <dir>/usr/local/share/fonts</dir>
+  <dir>~/.fonts</dir>
+  <dir>~/.local/share/fonts</dir>
+  <cachedir>$confdir/cache</cachedir>
+</fontconfig>
+EOF
+        mkdir -p "$confdir/cache"
+
+        # 包内字体必须始终生效（这是程序能启动的前提）：无条件用我们生成的
+        # 配置覆盖 FONTCONFIG_FILE。该配置里同时列出了常见系统字体目录，
+        # 因此不会丢掉宿主已装的字体；即便宿主一个字体都没有，包内字体也能
+        # 保证 Tk 不崩。用户的原始设置会被备份到 XENIA_CONFIGTOOL_USER_FONTCONF
+        # 仅供诊断查看。
+        if [ -n "${FONTCONFIG_FILE:-}" ] && [ "${FONTCONFIG_FILE}" != "$confdir/fonts.conf" ]; then
+            export XENIA_CONFIGTOOL_USER_FONTCONF="${XENIA_CONFIGTOOL_USER_FONTCONF:-$FONTCONFIG_FILE}"
+        fi
+        export FONTCONFIG_FILE="$confdir/fonts.conf"
+        log "已注册包内字体: $fontdir"
+    }
+    setup_fonts
+
+    local py
+    if ! py="$(find_python)"; then
+        echo "错误：未找到可用的 Python 解释器。" >&2
+        exit 3
+    fi
+    log "使用解释器: $py"
+
+    # 应用主体位于 AppDir 内
+    local app_main="$HERE/usr/share/$APP_ID/app.py"
+    if [ ! -f "$app_main" ]; then
+        # 开发模式兼容：直接跑当前目录下的 src/app.py
+        app_main="$HERE/src/app.py"
+    fi
+    if [ ! -f "$app_main" ]; then
+        echo "错误：未找到应用入口 app.py" >&2
+        exit 4
+    fi
+
+    export PYTHONPATH="$HERE/usr/share/$APP_ID:${PYTHONPATH:-}"
+    export PYTHONDONTWRITEBYTECODE=1
+
+    log "启动: $py $app_main $*"
+    exec "$py" "$app_main" "$@"
+}
+
+main "$@"

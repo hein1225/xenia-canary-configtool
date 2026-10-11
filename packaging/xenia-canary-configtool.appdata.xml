@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.xenia-configtool.XeniaCanaryConfigTool</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+
+  <name>Xenia Canary Config Tool</name>
+  <name xml:lang="zh_CN">Xenia Canary 配置工具</name>
+  <summary>Graphically edit the xenia-canary.config.toml file</summary>
+  <summary xml:lang="zh_CN">图形化编辑 xenia-canary.config.toml 配置文件</summary>
+
+  <description>
+    <p>
+      Xenia Canary Config Tool provides a graphical interface for every setting in
+      xenia-canary.config.toml. All 265 options across 22 sections are available,
+      organised into categories with their original documentation.
+    </p>
+    <p>
+      Built for Linux handhelds: it runs natively under Wayland (including the
+      gamescope compositor used by SteamOS game mode) and scales from 1280x800
+      displays upward. The interface is available in Simplified Chinese and
+      English, switchable at runtime.
+    </p>
+    <p>Features:</p>
+    <ul>
+      <li>Browse every setting by category, with search across names and descriptions</li>
+      <li>Type-aware editors: toggles for booleans, drop-downs for enumerated values, numeric fields with range hints</li>
+      <li>Hover any row to read its full documentation without leaving the list</li>
+      <li>Pick any xenia-canary.config.toml location; saving writes back in place</li>
+      <li>Automatic timestamped backup before every write</li>
+      <li>Preserves your file's comments, ordering and formatting</li>
+    </ul>
+    <p xml:lang="zh_CN">
+      Xenia Canary 配置工具为 xenia-canary.config.toml 中的每一项设置提供图形界面。
+      22 个分组、共 265 项配置全部可用，并按分类组织，同时保留官方原始说明。
+    </p>
+    <p xml:lang="zh_CN">
+      面向 Linux 掌机设计：在 Wayland（含 SteamOS 游戏模式使用的 gamescope 合成器）下原生运行，
+      1280x800 及更高分辨率均可自适应。界面支持简体中文与英文，可运行时实时切换。
+    </p>
+    <p xml:lang="zh_CN">主要功能：</p>
+    <ul xml:lang="zh_CN">
+      <li>按分类浏览全部设置，支持按名称与说明搜索</li>
+      <li>按类型智能编辑：布尔值用开关、枚举值用下拉框、数值项带范围提示</li>
+      <li>鼠标悬停即显示完整说明，不必离开列表</li>
+      <li>可自选 xenia-canary.config.toml 位置，保存时默认写回原文件</li>
+      <li>每次写入前自动生成带时间戳的备份</li>
+      <li>保留原文件的注释、顺序与排版格式</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">xenia-canary-configtool.desktop</launchable>
+  <url type="homepage">https://github.com/xenia-canary/xenia-canary</url>
+  <url type="bugtracker">https://github.com/xenia-canary/xenia-canary/issues</url>
+
+  <provides>
+    <binary>xenia-canary-configtool</binary>
+  </provides>
+
+  <categories>
+    <category>Game</category>
+    <category>Emulator</category>
+    <category>Settings</category>
+  </categories>
+
+  <keywords>
+    <keyword>Xbox</keyword>
+    <keyword>360</keyword>
+    <keyword>xenia</keyword>
+    <keyword>emulator</keyword>
+    <keyword>config</keyword>
+    <keyword>toml</keyword>
+  </keywords>
+
+  <content_rating type="oars-1.1"/>
+
+  <releases>
+    <release version="1.0.0" date="2026-10-10">
+      <description>
+        <p>Initial release: full coverage of all 265 settings in 22 sections, category navigation, hover documentation, bilingual interface, and automatic backups.</p>
+        <p xml:lang="zh_CN">首个版本：完整覆盖 22 个分组共 265 项设置，分类导航、悬停说明、中英双语界面与自动备份。</p>
+      </description>
+    </release>
+  </releases>
+</component>

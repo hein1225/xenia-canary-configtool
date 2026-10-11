@@ -1,0 +1,744 @@
+{
+ "user_country": [
+  {
+   "value": 1,
+   "code": "AE",
+   "zh": "阿联酋",
+   "en": "United Arab Emirates"
+  },
+  {
+   "value": 2,
+   "code": "AL",
+   "zh": "阿尔巴尼亚",
+   "en": "Albania"
+  },
+  {
+   "value": 3,
+   "code": "AM",
+   "zh": "亚美尼亚",
+   "en": "Armenia"
+  },
+  {
+   "value": 4,
+   "code": "AR",
+   "zh": "阿根廷",
+   "en": "Argentina"
+  },
+  {
+   "value": 5,
+   "code": "AT",
+   "zh": "奥地利",
+   "en": "Austria"
+  },
+  {
+   "value": 6,
+   "code": "AU",
+   "zh": "澳大利亚",
+   "en": "Australia"
+  },
+  {
+   "value": 7,
+   "code": "AZ",
+   "zh": "阿塞拜疆",
+   "en": "Azerbaijan"
+  },
+  {
+   "value": 8,
+   "code": "BE",
+   "zh": "比利时",
+   "en": "Belgium"
+  },
+  {
+   "value": 9,
+   "code": "BG",
+   "zh": "保加利亚",
+   "en": "Bulgaria"
+  },
+  {
+   "value": 10,
+   "code": "BH",
+   "zh": "巴林",
+   "en": "Bahrain"
+  },
+  {
+   "value": 11,
+   "code": "BN",
+   "zh": "文莱",
+   "en": "Brunei"
+  },
+  {
+   "value": 12,
+   "code": "BO",
+   "zh": "玻利维亚",
+   "en": "Bolivia"
+  },
+  {
+   "value": 13,
+   "code": "BR",
+   "zh": "巴西",
+   "en": "Brazil"
+  },
+  {
+   "value": 14,
+   "code": "BY",
+   "zh": "白俄罗斯",
+   "en": "Belarus"
+  },
+  {
+   "value": 15,
+   "code": "BZ",
+   "zh": "伯利兹",
+   "en": "Belize"
+  },
+  {
+   "value": 16,
+   "code": "CA",
+   "zh": "加拿大",
+   "en": "Canada"
+  },
+  {
+   "value": 18,
+   "code": "CH",
+   "zh": "瑞士",
+   "en": "Switzerland"
+  },
+  {
+   "value": 19,
+   "code": "CL",
+   "zh": "智利",
+   "en": "Chile"
+  },
+  {
+   "value": 20,
+   "code": "CN",
+   "zh": "中国大陆",
+   "en": "China"
+  },
+  {
+   "value": 21,
+   "code": "CO",
+   "zh": "哥伦比亚",
+   "en": "Colombia"
+  },
+  {
+   "value": 22,
+   "code": "CR",
+   "zh": "哥斯达黎加",
+   "en": "Costa Rica"
+  },
+  {
+   "value": 23,
+   "code": "CZ",
+   "zh": "捷克",
+   "en": "Czechia"
+  },
+  {
+   "value": 24,
+   "code": "DE",
+   "zh": "德国",
+   "en": "Germany"
+  },
+  {
+   "value": 25,
+   "code": "DK",
+   "zh": "丹麦",
+   "en": "Denmark"
+  },
+  {
+   "value": 26,
+   "code": "DO",
+   "zh": "多米尼加",
+   "en": "Dominican Republic"
+  },
+  {
+   "value": 27,
+   "code": "DZ",
+   "zh": "阿尔及利亚",
+   "en": "Algeria"
+  },
+  {
+   "value": 28,
+   "code": "EC",
+   "zh": "厄瓜多尔",
+   "en": "Ecuador"
+  },
+  {
+   "value": 29,
+   "code": "EE",
+   "zh": "爱沙尼亚",
+   "en": "Estonia"
+  },
+  {
+   "value": 30,
+   "code": "EG",
+   "zh": "埃及",
+   "en": "Egypt"
+  },
+  {
+   "value": 31,
+   "code": "ES",
+   "zh": "西班牙",
+   "en": "Spain"
+  },
+  {
+   "value": 32,
+   "code": "FI",
+   "zh": "芬兰",
+   "en": "Finland"
+  },
+  {
+   "value": 33,
+   "code": "FO",
+   "zh": "法罗群岛",
+   "en": "Faroe Islands"
+  },
+  {
+   "value": 34,
+   "code": "FR",
+   "zh": "法国",
+   "en": "France"
+  },
+  {
+   "value": 35,
+   "code": "GB",
+   "zh": "英国",
+   "en": "United Kingdom"
+  },
+  {
+   "value": 36,
+   "code": "GE",
+   "zh": "格鲁吉亚",
+   "en": "Georgia"
+  },
+  {
+   "value": 37,
+   "code": "GR",
+   "zh": "希腊",
+   "en": "Greece"
+  },
+  {
+   "value": 38,
+   "code": "GT",
+   "zh": "危地马拉",
+   "en": "Guatemala"
+  },
+  {
+   "value": 39,
+   "code": "HK",
+   "zh": "中国香港",
+   "en": "Hong Kong"
+  },
+  {
+   "value": 40,
+   "code": "HN",
+   "zh": "洪都拉斯",
+   "en": "Honduras"
+  },
+  {
+   "value": 41,
+   "code": "HR",
+   "zh": "克罗地亚",
+   "en": "Croatia"
+  },
+  {
+   "value": 42,
+   "code": "HU",
+   "zh": "匈牙利",
+   "en": "Hungary"
+  },
+  {
+   "value": 43,
+   "code": "ID",
+   "zh": "印度尼西亚",
+   "en": "Indonesia"
+  },
+  {
+   "value": 44,
+   "code": "IE",
+   "zh": "爱尔兰",
+   "en": "Ireland"
+  },
+  {
+   "value": 45,
+   "code": "IL",
+   "zh": "以色列",
+   "en": "Israel"
+  },
+  {
+   "value": 46,
+   "code": "IN",
+   "zh": "印度",
+   "en": "India"
+  },
+  {
+   "value": 47,
+   "code": "IQ",
+   "zh": "伊拉克",
+   "en": "Iraq"
+  },
+  {
+   "value": 48,
+   "code": "IR",
+   "zh": "伊朗",
+   "en": "Iran"
+  },
+  {
+   "value": 49,
+   "code": "IS",
+   "zh": "冰岛",
+   "en": "Iceland"
+  },
+  {
+   "value": 50,
+   "code": "IT",
+   "zh": "意大利",
+   "en": "Italy"
+  },
+  {
+   "value": 51,
+   "code": "JM",
+   "zh": "牙买加",
+   "en": "Jamaica"
+  },
+  {
+   "value": 52,
+   "code": "JO",
+   "zh": "约旦",
+   "en": "Jordan"
+  },
+  {
+   "value": 53,
+   "code": "JP",
+   "zh": "日本",
+   "en": "Japan"
+  },
+  {
+   "value": 54,
+   "code": "KE",
+   "zh": "肯尼亚",
+   "en": "Kenya"
+  },
+  {
+   "value": 55,
+   "code": "KG",
+   "zh": "吉尔吉斯斯坦",
+   "en": "Kyrgyzstan"
+  },
+  {
+   "value": 56,
+   "code": "KR",
+   "zh": "韩国",
+   "en": "South Korea"
+  },
+  {
+   "value": 57,
+   "code": "KW",
+   "zh": "科威特",
+   "en": "Kuwait"
+  },
+  {
+   "value": 58,
+   "code": "KZ",
+   "zh": "哈萨克斯坦",
+   "en": "Kazakhstan"
+  },
+  {
+   "value": 59,
+   "code": "LB",
+   "zh": "黎巴嫩",
+   "en": "Lebanon"
+  },
+  {
+   "value": 60,
+   "code": "LI",
+   "zh": "列支敦士登",
+   "en": "Liechtenstein"
+  },
+  {
+   "value": 61,
+   "code": "LT",
+   "zh": "立陶宛",
+   "en": "Lithuania"
+  },
+  {
+   "value": 62,
+   "code": "LU",
+   "zh": "卢森堡",
+   "en": "Luxembourg"
+  },
+  {
+   "value": 63,
+   "code": "LV",
+   "zh": "拉脱维亚",
+   "en": "Latvia"
+  },
+  {
+   "value": 64,
+   "code": "LY",
+   "zh": "利比亚",
+   "en": "Libya"
+  },
+  {
+   "value": 65,
+   "code": "MA",
+   "zh": "摩洛哥",
+   "en": "Morocco"
+  },
+  {
+   "value": 66,
+   "code": "MC",
+   "zh": "摩纳哥",
+   "en": "Monaco"
+  },
+  {
+   "value": 67,
+   "code": "MK",
+   "zh": "北马其顿",
+   "en": "North Macedonia"
+  },
+  {
+   "value": 68,
+   "code": "MN",
+   "zh": "蒙古",
+   "en": "Mongolia"
+  },
+  {
+   "value": 69,
+   "code": "MO",
+   "zh": "中国澳门",
+   "en": "Macao"
+  },
+  {
+   "value": 70,
+   "code": "MV",
+   "zh": "马尔代夫",
+   "en": "Maldives"
+  },
+  {
+   "value": 71,
+   "code": "MX",
+   "zh": "墨西哥",
+   "en": "Mexico"
+  },
+  {
+   "value": 72,
+   "code": "MY",
+   "zh": "马来西亚",
+   "en": "Malaysia"
+  },
+  {
+   "value": 73,
+   "code": "NI",
+   "zh": "尼加拉瓜",
+   "en": "Nicaragua"
+  },
+  {
+   "value": 74,
+   "code": "NL",
+   "zh": "荷兰",
+   "en": "Netherlands"
+  },
+  {
+   "value": 75,
+   "code": "NO",
+   "zh": "挪威",
+   "en": "Norway"
+  },
+  {
+   "value": 76,
+   "code": "NZ",
+   "zh": "新西兰",
+   "en": "New Zealand"
+  },
+  {
+   "value": 77,
+   "code": "OM",
+   "zh": "阿曼",
+   "en": "Oman"
+  },
+  {
+   "value": 78,
+   "code": "PA",
+   "zh": "巴拿马",
+   "en": "Panama"
+  },
+  {
+   "value": 79,
+   "code": "PE",
+   "zh": "秘鲁",
+   "en": "Peru"
+  },
+  {
+   "value": 80,
+   "code": "PH",
+   "zh": "菲律宾",
+   "en": "Philippines"
+  },
+  {
+   "value": 81,
+   "code": "PK",
+   "zh": "巴基斯坦",
+   "en": "Pakistan"
+  },
+  {
+   "value": 82,
+   "code": "PL",
+   "zh": "波兰",
+   "en": "Poland"
+  },
+  {
+   "value": 83,
+   "code": "PR",
+   "zh": "波多黎各",
+   "en": "Puerto Rico"
+  },
+  {
+   "value": 84,
+   "code": "PT",
+   "zh": "葡萄牙",
+   "en": "Portugal"
+  },
+  {
+   "value": 85,
+   "code": "PY",
+   "zh": "巴拉圭",
+   "en": "Paraguay"
+  },
+  {
+   "value": 86,
+   "code": "QA",
+   "zh": "卡塔尔",
+   "en": "Qatar"
+  },
+  {
+   "value": 87,
+   "code": "RO",
+   "zh": "罗马尼亚",
+   "en": "Romania"
+  },
+  {
+   "value": 88,
+   "code": "RU",
+   "zh": "俄罗斯",
+   "en": "Russia"
+  },
+  {
+   "value": 89,
+   "code": "SA",
+   "zh": "沙特阿拉伯",
+   "en": "Saudi Arabia"
+  },
+  {
+   "value": 90,
+   "code": "SE",
+   "zh": "瑞典",
+   "en": "Sweden"
+  },
+  {
+   "value": 91,
+   "code": "SG",
+   "zh": "新加坡",
+   "en": "Singapore"
+  },
+  {
+   "value": 92,
+   "code": "SI",
+   "zh": "斯洛文尼亚",
+   "en": "Slovenia"
+  },
+  {
+   "value": 93,
+   "code": "SK",
+   "zh": "斯洛伐克",
+   "en": "Slovakia"
+  },
+  {
+   "value": 95,
+   "code": "SV",
+   "zh": "萨尔瓦多",
+   "en": "El Salvador"
+  },
+  {
+   "value": 96,
+   "code": "SY",
+   "zh": "叙利亚",
+   "en": "Syria"
+  },
+  {
+   "value": 97,
+   "code": "TH",
+   "zh": "泰国",
+   "en": "Thailand"
+  },
+  {
+   "value": 98,
+   "code": "TN",
+   "zh": "突尼斯",
+   "en": "Tunisia"
+  },
+  {
+   "value": 99,
+   "code": "TR",
+   "zh": "土耳其",
+   "en": "Türkiye"
+  },
+  {
+   "value": 100,
+   "code": "TT",
+   "zh": "特立尼达和多巴哥",
+   "en": "Trinidad and Tobago"
+  },
+  {
+   "value": 101,
+   "code": "TW",
+   "zh": "中国台湾",
+   "en": "Taiwan"
+  },
+  {
+   "value": 102,
+   "code": "UA",
+   "zh": "乌克兰",
+   "en": "Ukraine"
+  },
+  {
+   "value": 103,
+   "code": "US",
+   "zh": "美国",
+   "en": "United States"
+  },
+  {
+   "value": 104,
+   "code": "UY",
+   "zh": "乌拉圭",
+   "en": "Uruguay"
+  },
+  {
+   "value": 105,
+   "code": "UZ",
+   "zh": "乌兹别克斯坦",
+   "en": "Uzbekistan"
+  },
+  {
+   "value": 106,
+   "code": "VE",
+   "zh": "委内瑞拉",
+   "en": "Venezuela"
+  },
+  {
+   "value": 107,
+   "code": "VN",
+   "zh": "越南",
+   "en": "Vietnam"
+  },
+  {
+   "value": 108,
+   "code": "YE",
+   "zh": "也门",
+   "en": "Yemen"
+  },
+  {
+   "value": 109,
+   "code": "ZA",
+   "zh": "南非",
+   "en": "South Africa"
+  }
+ ],
+ "user_language": [
+  {
+   "value": 1,
+   "code": "en",
+   "zh": "英语",
+   "en": "English"
+  },
+  {
+   "value": 2,
+   "code": "ja",
+   "zh": "日语",
+   "en": "Japanese"
+  },
+  {
+   "value": 3,
+   "code": "de",
+   "zh": "德语",
+   "en": "German"
+  },
+  {
+   "value": 4,
+   "code": "fr",
+   "zh": "法语",
+   "en": "French"
+  },
+  {
+   "value": 5,
+   "code": "es",
+   "zh": "西班牙语",
+   "en": "Spanish"
+  },
+  {
+   "value": 6,
+   "code": "it",
+   "zh": "意大利语",
+   "en": "Italian"
+  },
+  {
+   "value": 7,
+   "code": "ko",
+   "zh": "韩语",
+   "en": "Korean"
+  },
+  {
+   "value": 8,
+   "code": "zh",
+   "zh": "中文",
+   "en": "Chinese"
+  },
+  {
+   "value": 9,
+   "code": "pt",
+   "zh": "葡萄牙语",
+   "en": "Portuguese"
+  },
+  {
+   "value": 11,
+   "code": "pl",
+   "zh": "波兰语",
+   "en": "Polish"
+  },
+  {
+   "value": 12,
+   "code": "ru",
+   "zh": "俄语",
+   "en": "Russian"
+  },
+  {
+   "value": 13,
+   "code": "sv",
+   "zh": "瑞典语",
+   "en": "Swedish"
+  },
+  {
+   "value": 14,
+   "code": "tr",
+   "zh": "土耳其语",
+   "en": "Turkish"
+  },
+  {
+   "value": 15,
+   "code": "nb",
+   "zh": "书面挪威语",
+   "en": "Norwegian Bokmål"
+  },
+  {
+   "value": 16,
+   "code": "nl",
+   "zh": "荷兰语",
+   "en": "Dutch"
+  },
+  {
+   "value": 17,
+   "code": "zh",
+   "zh": "中文",
+   "en": "Chinese"
+  }
+ ]
+}
