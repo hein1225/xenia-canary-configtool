@@ -333,9 +333,18 @@ def main() -> int:
                 val_need = a._text_width(lv) + pad
                 if c["brief"] > c["key"] + 2:
                     bad_pair.append(f"{sec}: 中文名比设置项更宽 {c['brief']}>{c['key']}")
-                if val_need <= c["modified"] + 4 and c["value"] > c["modified"] + 4:
+                # 「当前值」列有 70px 的硬下限，它来自表头「当前值」三个粗体字
+                # 的实测宽度 —— 低于此值表头会被截断。因此当本组值都很短时，
+                # 列宽停在 70 是正确行为，不应判为缺陷。这里把下限纳入比较，
+                # 下限随语言而变，故用当前语言的表头实测宽度。
+                val_floor = max(70, a._text_width(a.t("col_value"), bold=True) + pad)
+                # 容差 8px：列宽按实测像素分配，不同字体/后端会有几像素出入，
+                # 卡太紧会让 CI 因度量差异误报。超过 8px 才算真的白占空间。
+                if val_need <= c["modified"] + 4 \
+                        and c["value"] > max(c["modified"] + 4, val_floor + 8):
                     bad_pair.append(
-                        f"{sec}: 值只需 {val_need} 却占 {c['value']}（已修改 {c['modified']}）")
+                        f"{sec}: 值只需 {val_need} 却占 {c['value']}"
+                        f"（已修改 {c['modified']}，下限 {val_floor}）")
                 star_w = a.tree.column("star", "width")
                 avail = a.tree.winfo_width() - a._tree_sb_w - 2
                 total = star_w + sum(c.values())
