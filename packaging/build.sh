@@ -114,6 +114,14 @@ bundle_python() {
         base="$(basename "$item")"
         case "$base" in
             test|tests|idlelib|tkinter/test*|lib2to3|distutils|ensurepip|venv|__pycache__) continue ;;
+            # config-<ver>-<triplet>/ 是 CPython 的开发用目录，只在装了
+            # python3-dev 的机器上存在，里面有 libpython3.x.a（静态库）、
+            # libpython3.x-pic.a 与 libpython3.x.so，合计约 35MB，运行期
+            # 完全用不到。若不排除，同一份源码在装了 dev 包的环境（如 CI）
+            # 会打出明显更大的包。
+            config-*) continue ;;
+            # 编译期头文件同理
+            include) continue ;;
         esac
         cp -rL "$item" "$APPDIR/usr/lib/python$py_ver/" 2>/dev/null || true
     done
