@@ -275,6 +275,10 @@ def main() -> int:
         root.geometry("1500x950")
         root.tk.call("tk", "scaling", 2.0)
         a = appmod.ConfigToolApp(root)
+        # 必须显式加载仓库自带的参考配置：应用默认去 $HOME/.config 找用户的
+        # 真实配置，而 CI 等干净环境里并没有这个文件，会导致每个分组卡片有
+        # 计数、列表却是空的，看上去像程序缺陷，其实是测试依赖了机器状态。
+        a.load_file(ROOT / "reference.config.toml")
         # 应用默认会在启动后自动最大化，会把上面指定的 1500x950 冲掉，
         # 测的就不是我们想要的那组尺寸了。这里撤销它的定时任务，保持
         # 尺寸可控；自动最大化本身由 tools/test_maximize.py 单独覆盖。
