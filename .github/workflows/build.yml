@@ -18,7 +18,9 @@ jobs:
   # ------------------------------------------------------------------
   test:
     name: 测试
-    runs-on: ubuntu-22.04
+    # 需要 Python >= 3.11：源码与测试都用标准库 tomllib 校验 TOML。
+    # ubuntu-22.04 自带 Python 3.10，没有 tomllib，会在导入阶段就失败。
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +28,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-tk xvfb x11-utils
+          echo "--- Python 版本 ---"
+          python3 --version
+          python3 -c "import tomllib; print('tomllib OK')"
 
       - name: 端到端测试
         run: |
@@ -42,20 +47,25 @@ jobs:
   build:
     name: 构建 AppImage
     needs: test
-    runs-on: ubuntu-22.04
+    # 与 test 保持一致，同样需要 Python >= 3.11（tomllib）。
+    # 产物会捆绑 runner 自带的 Python 运行时，因此这里的版本决定交付物的版本。
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
       - name: 安装构建依赖
         run: |
           sudo apt-get update
+          # libfuse2 在 24.04 改名为 libfuse2t64，两个名字都试一次以兼容。
           sudo apt-get install -y \
             python3-tk python3-dev \
             fonts-dejavu-core fonts-wqy-microhei \
-            libfuse2 file zsync
+            file zsync
+          sudo apt-get install -y libfuse2t64 || sudo apt-get install -y libfuse2 || true
           echo "--- 依赖版本 ---"
           python3 --version
           python3 -c "import tkinter; print('tkinter OK, Tk', tkinter.TkVersion)"
+          python3 -c "import tomllib; print('tomllib OK')"
 
       - name: 校验构建工具齐备
         run: |
@@ -94,7 +104,7 @@ jobs:
   release:
     name: 发布 Release
     needs: build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       tag: ${{ steps.tag.outputs.tag }}
       url: ${{ steps.publish.outputs.url }}

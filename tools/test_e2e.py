@@ -19,8 +19,17 @@ import subprocess
 import sys
 import tempfile
 import time
-import tomllib
 from pathlib import Path
+
+# tomllib 是标准库，但 Python < 3.11 没有它。这里主动给出可读的提示，
+# 否则只会看到一行 ModuleNotFoundError，很难判断是环境版本问题。
+if sys.version_info < (3, 11):
+    sys.exit(
+        f"需要 Python 3.11 及以上（当前 {sys.version.split()[0]}）。\n"
+        "本项目的 TOML 校验依赖标准库 tomllib，该模块自 3.11 起才提供。\n"
+        "Ubuntu 22.04 自带的 python3 是 3.10，请改用 24.04 或自行安装新版 Python。"
+    )
+import tomllib  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
